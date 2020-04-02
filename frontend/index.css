@@ -1,0 +1,33 @@
+.formCard {
+  max-width: 25rem; 
+  min-width: 20rem; 
+  margin-top:20px; 
+  margin-left:20px;
+}
+
+.submitDiv {
+  margin-top:20px; 
+}
+
+/* Hide standard radio element */
+[type=radio] { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Force cursor pointer when hovering over the radio icon */
+[type=radio] + i {
+  cursor: pointer;
+}
+
+/* when selected icon opacity = 1 */
+[type=radio]:checked + i {
+  opacity: 1;
+}
+
+/* when not selected icon opacity = 0.3 */
+[type=radio] + i {
+  opacity: 0.3;
+}

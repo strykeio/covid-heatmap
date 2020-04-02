@@ -1,0 +1,187 @@
+{
+    "actions": {
+        "getroutes": {
+            "actionDescription": "Retrieves routes created in the last 7 days",
+            "actionLabel": "Get Routes",
+            "actionName": "getroutes",
+            "entityMetadataDefinitionName": null,
+            "returnType": "array",
+            "scriptDefinitionName": "getroutes",
+            "templateDefinitionName": null,
+            "type": "httpAction"
+        },
+        "submitRoute": {
+            "actionDescription": "Accepts start and end points, and method of transport and creates a route record with a calculated path and name",
+            "actionLabel": "submitRoute",
+            "actionName": "submitRoute",
+            "entityMetadataDefinitionName": null,
+            "returnType": "string",
+            "scriptDefinitionName": "submitRoute",
+            "templateDefinitionName": null,
+            "type": "httpAction"
+        }
+    },
+    "appInstanceDefinition": {
+        "description": "An app to process and store data about how people are moving and help represent it in a heatmap",
+        "name": "vheat-app",
+        "title": "COVID-19 Heatmap"
+    },
+    "entityMetadataDefinition": {
+        "route": {
+            "alias": {
+                "pattern": "[$]-{00000}"
+            },
+            "description": "Represents a journey a person took. It holds the start and end points of the route, the path and a readable description",
+            "entityColor": "#598bff",
+            "entityIcon": "route",
+            "entityName": "route",
+            "fields": [
+                {
+                    "description": "A descriptive name of this route",
+                    "label": "Route name",
+                    "name": "routeName",
+                    "required": false,
+                    "type": "string"
+                },
+                {
+                    "description": "The Latitude of the start point",
+                    "label": "Start Latitude",
+                    "name": "start_lat",
+                    "required": false,
+                    "type": "number"
+                },
+                {
+                    "description": "The Longitude of the start point",
+                    "label": "Start Longitude",
+                    "name": "start_lng",
+                    "required": false,
+                    "type": "number"
+                },
+                {
+                    "description": "The Latitude of the end point",
+                    "label": "End Latitude",
+                    "name": "end_lat",
+                    "required": false,
+                    "type": "number"
+                },
+                {
+                    "description": "The Longitude of the end point",
+                    "label": "End Longitude",
+                    "name": "end_lng",
+                    "required": false,
+                    "type": "number"
+                },
+                {
+                    "description": "The path as an encoded polyline",
+                    "label": "Encoded Path",
+                    "name": "path",
+                    "required": false,
+                    "type": "string"
+                }
+            ],
+            "public": true,
+            "title": "Route"
+        },
+        "settings": {
+            "alias": {
+                "pattern": "[$]-{00000}"
+            },
+            "description": "Holds any settings required by this application, like API keys, secrets, etc. There should only ever be one record of this entity in an app.",
+            "entityColor": "#3f4b66",
+            "entityIcon": "cog",
+            "entityName": "settings",
+            "fields": [
+                {
+                    "description": "Holds the google maps API key to use",
+                    "label": "Google Maps API key",
+                    "name": "googleMapsApiKey",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "public": true,
+            "title": "Settings"
+        }
+    },
+    "htmlTemplates": {},
+    "resourcesAccess": [],
+    "scripts": {
+        "createSampleRoutes": {
+            "scriptArguments": [
+                {
+                    "argumentName": "user",
+                    "argumentSourceDefinition": null,
+                    "argumentSourceType": "userInfo",
+                    "argumentType": "object"
+                },
+                {
+                    "argumentName": "requestData",
+                    "argumentSourceDefinition": null,
+                    "argumentSourceType": "requestData",
+                    "argumentType": "object"
+                }
+            ],
+            "scriptLanguage": "js",
+            "scriptName": "createSampleRoutes",
+            "scriptResultDefinition": {
+                "returnType": "void",
+                "returnValueName": null
+            },
+            "scriptSource": "LyoqCiAqIGdlbmVyYXRlcyBzb21lIHJhbmRvbSByb3V0ZXMgdG8gdGVzdCB0aGUgaGVhdG1hcAogKi8KY29uc3QgYXhpb3MgPSByZXF1aXJlKCdheGlvcycpOwoKY29uc3QgUk9VVEVTX1RPX0NSRUFURSA9IDE1MDsKCmNvbnN0IGRlc3RpbmF0aW9ucyA9IFsnNDEuMzkxMzExLCAyLjE1MTE0MicsCic0MS4zODk1MDAsIDIuMTYwNjE2JywKJzQxLjM4NjI5NiwgMi4xNTUzMTYnLAonNDEuMzg0MzI0LCAyLjE1MTE1MycsCic0MS4zODU2MjgsIDIuMTQyNzg1JywKJzQxLjM5MDI4OSwgMi4xNDEyMTknLAonNDEuMzkzMDY2LCAyLjE0NDYzMScsCic0MS4zOTQ0NDUsIDIuMTUxMzIwJywKJzQxLjM5MjAxNCwgMi4xNjE5NjMnLAonNDEuMzk0NTA5LCAyLjE2Nzg4NScsCic0MS4zOTQzODQsIDIuMTc2MDI3JywKJzQxLjM5MTE1NiwgMi4xNzM3NTInLAonNDEuMzg3OTIwLCAyLjE2OTk2NScsCic0MS4zOTI1ODgsIDIuMTY5NjMyJywKJzQxLjM5MTMxMSwgMi4xNTExNDInLAonNDEuMzg5NTAwLCAyLjE2MDYxNicsCic0MS4zODYyOTYsIDIuMTU1MzE2JywKJzQxLjM4NDMyNCwgMi4xNTExNTMnLAonNDEuMzg1NjI4LCAyLjE0Mjc4NScsCic0MS4zOTAyODksIDIuMTQxMjE5JywKJzQxLjM5MzA2NiwgMi4xNDQ2MzEnLAonNDEuMzk0NDQ1LCAyLjE1MTMyMCcsCic0MS4zOTIwMTQsIDIuMTYxOTYzJywKJzQxLjM5NDUwOSwgMi4xNjc4ODUnLAonNDEuMzk0Mzg0LCAyLjE3NjAyNycsCic0MS4zOTExNTYsIDIuMTczNzUyJywKJzQxLjM4NzkyMCwgMi4xNjk5NjUnLAonNDEuMzkyNTg4LCAyLjE2OTYzMicsCic0MS4zOTEzMTEsIDIuMTUxMTQyJywKJzQxLjM4OTUwMCwgMi4xNjA2MTYnLAonNDEuMzg2Mjk2LCAyLjE1NTMxNicsCic0MS4zODQzMjQsIDIuMTUxMTUzJywKJzQxLjM4NTYyOCwgMi4xNDI3ODUnLAonNDEuMzkwMjg5LCAyLjE0MTIxOScsCic0MS4zOTMwNjYsIDIuMTQ0NjMxJywKJzQxLjM5NDQ0NSwgMi4xNTEzMjAnLAonNDEuMzkyMDE0LCAyLjE2MTk2MycsCic0MS4zOTQ1MDksIDIuMTY3ODg1JywKJzQxLjM5NDM4NCwgMi4xNzYwMjcnLAonNDEuMzkxMTU2LCAyLjE3Mzc1MicsCic0MS4zODc5MjAsIDIuMTY5OTY1JywKJzQxLjM5MjU4OCwgMi4xNjk2MzInLAonNDEuMzg4NzksMi4xNTg5OScsCic0MS40NTAwNCwyLjI0NzQxJywKJzQxLjM3OTE1OCwyLjEzOTk1MScsCic0MS4zODcyMjAsMi4xNzAxNTknLAonNDEuMzg1ODg0LDIuMTYzOTMzJywKJzQxLjM4NDM4MiwyLjE5NDIzMycsCic0MS4zODg2NTYsMi4xNTEwOTMnLAonNDEuNDEzOTIzLDIuMTMxNDYzJywKJzQxLjQwODU5MiwyLjE1NDI2NycKXTsKCmNvbnN0IHRyYW5zcG9ydHMgID0gWyd3YWxraW5nJywgJ2JpY3ljbGluZycsICdkcml2aW5nJywgJ3RyYW5zaXQnXTsKCmdlbmVyYXRlUm91dGVzKCk7CgpmdW5jdGlvbiBnZXRSYW5kb21EZXN0aW5hdGlvbigpIHsKICByZXR1cm4gZGVzdGluYXRpb25zW01hdGguZmxvb3IoTWF0aC5yYW5kb20oKSAqIGRlc3RpbmF0aW9ucy5sZW5ndGgpXTsKfQoKZnVuY3Rpb24gZ2V0UmFuZG9tVHJhbnNwb3J0VHlwZSgpIHsKICByZXR1cm4gdHJhbnNwb3J0c1tNYXRoLmZsb29yKE1hdGgucmFuZG9tKCkgKiB0cmFuc3BvcnRzLmxlbmd0aCldOwp9Cgphc3luYyBmdW5jdGlvbiBnZW5lcmF0ZVJvdXRlcygpIHsKICBjb25zdCBhcGlLZXkgPSBnZXRHb29nbGVNYXBzQXBpS2V5KCk7CgogIGZvciAobGV0IGkgPSAwOyBpIDwgUk9VVEVTX1RPX0NSRUFURTsgaSsrKSB7CiAgICBhd2FpdCBjcmVhdGVSb3V0ZSh7IG9yaWdpbjogZ2V0UmFuZG9tRGVzdGluYXRpb24oKSwgZGVzdGluYXRpb246IGdldFJhbmRvbURlc3RpbmF0aW9uKCl9LCBhcGlLZXkpOwogIH0KCiAgc3RyeWtlLnJlc29sdmUoUk9VVEVTX1RPX0NSRUFURSArICcgcm91dGVzIGNyZWF0ZWQnKTsgICAKfQoKYXN5bmMgZnVuY3Rpb24gY3JlYXRlUm91dGUoZGVzdGluYXRpb25Qb2ludHMsIGFwaUtleSkgewogIAogIGNvbnN0IHRyYW5zcG9ydFR5cGUgPSBnZXRSYW5kb21UcmFuc3BvcnRUeXBlKCk7CgogIGNvbnN0IHVybCA9IGBodHRwczovL21hcHMuZ29vZ2xlYXBpcy5jb20vbWFwcy9hcGkvZGlyZWN0aW9ucy9qc29uP29yaWdpbj0ke2Rlc3RpbmF0aW9uUG9pbnRzLm9yaWdpbn0mZGVzdGluYXRpb249JHtkZXN0aW5hdGlvblBvaW50cy5kZXN0aW5hdGlvbn0ma2V5PSR7YXBpS2V5fSZtb2RlPSR7dHJhbnNwb3J0VHlwZX1gOwoKICB0cnkgewogICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCBheGlvcy5nZXQodXJsKTsKCiAgICBjb25zdCByb3V0ZSA9IHBhcnNlV2F5cG9pbnRzKHJlc3BvbnNlLmRhdGEsIHRyYW5zcG9ydFR5cGUpOwogICAgYXdhaXQgc3RyeWtlLmNyZWF0ZSgncm91dGUnLCByb3V0ZSk7CiAgfQogIGNhdGNoKGVycm9yKSB7CiAgICAvLyBoYW5kbGUgZXJyb3JzCiAgICBzdHJ5a2UuZXJyb3IoJ0NhbGxvdXQgZmFpbGVkOiAnICsgZXJyb3IubWVzc2FnZSk7CiAgfQp9CgpmdW5jdGlvbiBwYXJzZVdheXBvaW50cyhkYXRhLCB0cmFuc3BvcnRUeXBlKSB7CiAgCiAgY29uc3Qgc2VsZWN0ZWRSb3V0ZSA9IGRhdGEucm91dGVzWzBdOwogIGNvbnN0IHJvdXRlTGVncyA9IHNlbGVjdGVkUm91dGUubGVnczsKCiAgbGV0IHJvdXRlID0gewogICAgcGF0aDogc2VsZWN0ZWRSb3V0ZS5vdmVydmlld19wb2x5bGluZS5wb2ludHMsICAgIAogICAgc3RhcnRfbGF0OiByb3V0ZUxlZ3NbMF0uc3RhcnRfbG9jYXRpb24ubGF0LAogICAgc3RhcnRfbG5nOiByb3V0ZUxlZ3NbMF0uc3RhcnRfbG9jYXRpb24ubG5nLAogICAgZW5kX2xhdDogcm91dGVMZWdzW3JvdXRlTGVncy5sZW5ndGgtMV0uZW5kX2xvY2F0aW9uLmxhdCwKICAgIGVuZF9sbmc6IHJvdXRlTGVnc1tyb3V0ZUxlZ3MubGVuZ3RoLTFdLmVuZF9sb2NhdGlvbi5sbmcsCiAgICByb3V0ZU5hbWU6IGAke3RyYW5zcG9ydFR5cGV9IGZyb206ICR7cm91dGVMZWdzWzBdLnN0YXJ0X2FkZHJlc3N9IHRvOiAke3JvdXRlTGVnc1tyb3V0ZUxlZ3MubGVuZ3RoLTFdLmVuZF9hZGRyZXNzfWAKICB9CgogIHJldHVybiByb3V0ZTsKfQoKYXN5bmMgZnVuY3Rpb24gZ2V0R29vZ2xlTWFwc0FwaUtleSgpIHsKICB0cnkgewogICAgY29uc3QgcmVzdWx0ID0gc3RyeWtlLmZpbmQoYFNldHRpbmdzIHsgZ29vZ2xlTWFwc0FwaUtleSB9YCk7CiAgICByZXR1cm4gcmVzdWx0WzBdLmdvb2dsZU1hcHNBcGlLZXk7CiAgfQogIGNhdGNoIChlcnIpIHsKICAgIGNvbnNvbGUuZXJyb3IoJ0ZhaWxlZCB0byByZXRyaWV2ZSB0aGUgZ29vZ2xlIG1hcHMgYXBpIGtleS4gJyArIGVyci5tZXNzYWdlKTsKICAgIHN0cnlrZS5lcnJvcignRmFpbGVkIHRvIHJldHJpZXZlIHRoZSBhcHBcJ3Mgc2V0dGluZ3MuIERvZXMgYSBzZXR0aW5ncyByZWNvcmRzIGV4aXN0PyBJcyB0aGUga2V5IHNldCBvbiB0aGF0IHJlY29yZD8nKTsKICB9Cn0="
+        },
+        "getroutes": {
+            "scriptArguments": [
+                {
+                    "argumentName": "user",
+                    "argumentSourceDefinition": null,
+                    "argumentSourceType": "userInfo",
+                    "argumentType": "object"
+                },
+                {
+                    "argumentName": "requestData",
+                    "argumentSourceDefinition": null,
+                    "argumentSourceType": "requestData",
+                    "argumentType": "object"
+                }
+            ],
+            "scriptLanguage": "js",
+            "scriptName": "getroutes",
+            "scriptResultDefinition": {
+                "returnType": "array",
+                "returnValueName": null
+            },
+            "scriptSource": "Ci8qKgogKiBUaGlzIHNjcmlwdCByZXRyaWV2ZXMgYWxsIHJvdXRlcyBpbiB0aGUgbGFzdCA3IGRheXMKICogCiAqIEZvciBtb3JlIGRldGFpbHMgb24gU3RyeWtlIGNoZWNrIG91dDogd3d3LnN0cnlrZS5pbwogKiBGb3IgZG9jdW1lbnRhdGlvbiBnbyB0bzogZG9jcy5zdHJ5a2UuaW8KICovCmNvbnN0IG1vbWVudCA9IHJlcXVpcmUoJ21vbWVudCcpOwpjb25zdCBEQVRBX1dJTkRPV19EQVlTID0gNzsKCmFzeW5jIGZ1bmN0aW9uIGdldFJvdXRlcygpIHsKCiAgICBjb25zdCBzdGFydERhdGUgPSBtb21lbnQoKS5hZGQoLURBVEFfV0lORE9XX0RBWVMsICdkYXlzJyk7CiAgICBjb25zb2xlLmxvZyhzdGFydERhdGUudG9JU09TdHJpbmcoKSk7CiAgICB0cnkgewogICAgICAgIGNvbnN0IHJvdXRlcyA9IGF3YWl0IHN0cnlrZS5maW5kKGB7IAogICAgICAgICAgICAgICAgUm91dGUgKCBmaWx0ZXI6IHsgY3JlYXRlZCA6IHsgZ3QgOiAiJHtzdGFydERhdGUudG9JU09TdHJpbmcoKX0iIH19ICAgICAgCiAgICAgICAgICAgICAgICApIHsKICAgICAgICAgICAgICAgICAgICBzdGFydF9sYXQsIHN0YXJ0X2xuZywgZW5kX2xhdCwgZW5kX2xuZywgcGF0aAogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9YCk7CgogICAgICAgIHN0cnlrZS5yZXNvbHZlKHJvdXRlcyk7CiAgICB9CiAgICBjYXRjaCAoZXJyKSB7CiAgICAgICAgY29uc29sZS5lcnJvcignRmFpbGVkIHRvIHJldHJpZXZlIHJvdXRlczogJyArIGVyci5tZXNzYWdlKTsKICAgICAgICBzdHJ5a2UuZXJyb3IoJ0ZhaWxlZCB0byByZXRyaWV2ZSByb3V0ZXMnKTsKICAgIH0KfQoKZ2V0Um91dGVzKCk7"
+        },
+        "submitRoute": {
+            "scriptArguments": [
+                {
+                    "argumentName": "user",
+                    "argumentSourceDefinition": null,
+                    "argumentSourceType": "userInfo",
+                    "argumentType": "object"
+                },
+                {
+                    "argumentName": "requestData",
+                    "argumentSourceDefinition": null,
+                    "argumentSourceType": "requestData",
+                    "argumentType": "object"
+                }
+            ],
+            "scriptLanguage": "js",
+            "scriptName": "submitRoute",
+            "scriptResultDefinition": {
+                "returnType": "string",
+                "returnValueName": null
+            },
+            "scriptSource": "LyoqCiAqIFRoaXMgc2NyaXB0IGFjY2VwdHMgYSBwYXlsb2FkIHdpdGggZ2VvIHN0YXJ0IGFuZCBlbmQgcG9pbnRzLCBhcyB3ZWxsIGFzIGFuIAogKiBvcHRpb25hbCB0eXBlIG9mIHRyYW5zcG9ydCwgYW5kIGNhbGN1bGF0ZXMgYSByb3V0ZSBiZXR3ZWVuIHRob3NlIHBvaW50cy4KICogQSBuZXcgcm91dGUgcmVjb3JkIGlzIGNyZWF0ZWQgd2l0aCB0aGUgaW5mb3JtYXRpb24gY2FsY3VsYXRlZC4gCiAqIAogKiBGb3IgbW9yZSBkZXRhaWxzIG9uIFN0cnlrZSBjaGVjayBvdXQ6IHd3dy5zdHJ5a2UuaW8KICogRm9yIGRvY3VtZW50YXRpb24gZ28gdG86IGRvY3Muc3RyeWtlLmlvCiAqLwpjb25zdCBheGlvcyA9IHJlcXVpcmUoJ2F4aW9zJyk7CgpnZW5lcmF0ZVJvdXRlKCk7Cgphc3luYyBmdW5jdGlvbiBnZW5lcmF0ZVJvdXRlKCkgewogICAgCiAgdHJ5IHsKICAgIGNvbnN0IHBheWxvYWQgPSBzdHJ5a2UuZGF0YS5yZXF1ZXN0RGF0YTsgICAgCiAgICAKICAgIGNvbnN0IHN0YXJ0UG9pbnQgPSBgJHtwYXlsb2FkLnN0YXJ0X2xhdH0sJHtwYXlsb2FkLnN0YXJ0X2xuZ31gOwogICAgY29uc3QgZW5kUG9pbnQgPSBgJHtwYXlsb2FkLmVuZF9sYXR9LCR7cGF5bG9hZC5lbmRfbG5nfWA7CiAgICBjb25zdCByb3V0ZVR5cGUgPSBwYXlsb2FkLnJvdXRlVHlwZSA/IHBheWxvYWQucm91dGVUeXBlIDogJ3dhbGtpbmcnOwoKICAgIGF3YWl0IGdldERpcmVjdGlvbnMoc3RhcnRQb2ludCwgZW5kUG9pbnQsIHJvdXRlVHlwZSk7CiAgICAKICAgIHN0cnlrZS5yZXNvbHZlKCdyb3V0ZSBjcmVhdGVkJyk7ICAgCiAgfQogIGNhdGNoKGVycm9yKSB7CiAgICAvLyBoYW5kbGUgZXJyb3JzCiAgICBzdHJ5a2UuZXJyb3IoJ0NhbGxvdXQgZmFpbGVkOiAnICsgZXJyb3IubWVzc2FnZSk7CiAgfQp9Cgphc3luYyBmdW5jdGlvbiBnZXREaXJlY3Rpb25zKHN0YXJ0UG9pbnQsIGVuZFBvaW50LCByb3V0ZVR5cGUpIHsgIAogIGNvbnN0IGFwaUtleSA9IGF3YWl0IGdldEdvb2dsZU1hcHNBcGlLZXkoKTsKCiAgY29uc3QgdXJsID0gYGh0dHBzOi8vbWFwcy5nb29nbGVhcGlzLmNvbS9tYXBzL2FwaS9kaXJlY3Rpb25zL2pzb24/b3JpZ2luPSR7c3RhcnRQb2ludH0mZGVzdGluYXRpb249JHtlbmRQb2ludH0ma2V5PSR7YXBpS2V5fSZtb2RlPSR7cm91dGVUeXBlfWA7CgogIGNvbnNvbGUubG9nKCd1cmw6ICcgKyB1cmwpOwogIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgYXhpb3MuZ2V0KHVybCk7CiAgCiAgY29uc3Qgcm91dGUgPSBjcmVhdGVSb3V0ZUZyb21EaXJlY3Rpb25zKHJlc3BvbnNlLmRhdGEsIHJvdXRlVHlwZSk7CiAgYXdhaXQgc3RyeWtlLmNyZWF0ZSgncm91dGUnLCByb3V0ZSk7Cn0KCmZ1bmN0aW9uIGNyZWF0ZVJvdXRlRnJvbURpcmVjdGlvbnMoZGF0YSwgcm91dGVUeXBlKSB7CiAgCiAgY29uc3Qgc2VsZWN0ZWRSb3V0ZSA9IGRhdGEucm91dGVzWzBdOwogIGNvbnN0IHJvdXRlTGVncyA9IHNlbGVjdGVkUm91dGUubGVnczsKCiAgLy8gc3RvcmUgdGhlIGVuY29kZWQgcG9seWxpbmUsIHN0YXJ0IGFuZCBlbmQgcG9pbnRzIGFuZCBjb25zdHJ1Y3QgYSByZWFkYWJsZSBuYW1lCiAgbGV0IHJvdXRlID0gewogICAgcGF0aDogc2VsZWN0ZWRSb3V0ZS5vdmVydmlld19wb2x5bGluZS5wb2ludHMsICAgIAogICAgc3RhcnRfbGF0OiByb3V0ZUxlZ3NbMF0uc3RhcnRfbG9jYXRpb24ubGF0LAogICAgc3RhcnRfbG5nOiByb3V0ZUxlZ3NbMF0uc3RhcnRfbG9jYXRpb24ubG5nLAogICAgZW5kX2xhdDogcm91dGVMZWdzW3JvdXRlTGVncy5sZW5ndGgtMV0uZW5kX2xvY2F0aW9uLmxhdCwKICAgIGVuZF9sbmc6IHJvdXRlTGVnc1tyb3V0ZUxlZ3MubGVuZ3RoLTFdLmVuZF9sb2NhdGlvbi5sbmcsCiAgICByb3V0ZU5hbWU6IGAke3JvdXRlVHlwZX0gZnJvbTogJHtyb3V0ZUxlZ3NbMF0uc3RhcnRfYWRkcmVzc30gdG86ICR7cm91dGVMZWdzW3JvdXRlTGVncy5sZW5ndGgtMV0uZW5kX2FkZHJlc3N9YAogIH0KCiAgcmV0dXJuIHJvdXRlOwp9Cgphc3luYyBmdW5jdGlvbiBnZXRHb29nbGVNYXBzQXBpS2V5KCkgewogIHRyeSB7CiAgICBjb25zdCByZXN1bHQgPSBhd2FpdCBzdHJ5a2UuZmluZChgeyBTZXR0aW5ncyB7IGdvb2dsZU1hcHNBcGlLZXkgfSB9YCk7CiAgICByZXR1cm4gcmVzdWx0WzBdLmdvb2dsZU1hcHNBcGlLZXk7CiAgfQogIGNhdGNoIChlcnIpIHsKICAgIGNvbnNvbGUuZXJyb3IoJ0ZhaWxlZCB0byByZXRyaWV2ZSB0aGUgZ29vZ2xlIG1hcHMgYXBpIGtleS4gJyArIGVyci5tZXNzYWdlKTsKICAgIHN0cnlrZS5lcnJvcignRmFpbGVkIHRvIHJldHJpZXZlIHRoZSBhcHBcJ3Mgc2V0dGluZ3MuIERvZXMgYSBzZXR0aW5ncyByZWNvcmRzIGV4aXN0PyBJcyB0aGUga2V5IHNldCBvbiB0aGF0IHJlY29yZD8nKTsKICB9Cn0="
+        }
+    },
+    "userRoles": {
+        "admin": {
+            "name": "admin"
+        },
+        "user": {
+            "name": "user"
+        }
+    }
+}
